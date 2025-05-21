@@ -33,8 +33,17 @@ export class ProcessDataService {
    * @param id ID do pagamento
    * @returns Status do pagamento
    */
-  async getStatus(id: string): Promise<string> {
-    const pixStatus = await this.abacatePayService.checkPixStatus(id);
+  async getStatus(id_compra: string, id_mensagem: string): Promise<string> {
+    const pixStatus = await this.abacatePayService.checkPixStatus(id_compra);
+
+    if (pixStatus != 'PAID') {
+      throw new Error('Pagamento ainda não foi confirmado');
+    }
+    const mensagem = await this.messageModel.findOne({ id_mensagem });
+
+    //postar mensagem no whatsapp
+    // await this.whatsappService.sendMessage(mensagem.numeroDestinario, mensagem.mensagem);
+
     return pixStatus.status;
   }
 

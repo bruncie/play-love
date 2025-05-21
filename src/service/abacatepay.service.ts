@@ -81,7 +81,12 @@ export class AbacatePayService {
                 }),
             );
 
-            return response.data;
+            const pixStatus: AbacatePayStatusResponseDto = {
+                status: response.data.status,
+                expiresAt: response.data.expiresAt
+            };
+            
+            return pixStatus;
         } catch (error) {
             console.error('Erro ao verificar status do PIX:', error.response?.data || error.message);
             throw new HttpException(

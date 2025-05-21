@@ -18,10 +18,12 @@ export class ProcessDataController {
     }
   }
 
-  @Get(':id')
-  async getStatus(@Param('id') id: string): Promise<string> {
+  @Get(':id_compra/:id_mensagem')
+  async getStatus(
+    @Param('id_compra') id_compra: string,
+    @Param('id_mensagem') id_mensagem: string): Promise<string> {
     try {
-      return await this.processDataService.getStatus(id);
+      return await this.processDataService.getStatus(id_compra, id_mensagem);
     } catch (error) {
       throw new HttpException(
         error.message || 'Desculpe, não conseguimos processar sua solicitação',
