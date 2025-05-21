@@ -36,10 +36,7 @@ export class Payment extends Document {
   amount: number;
 
   @Prop({ required: true })
-  expiresIn: number;
-
-  @Prop({ required: true })
-  description: string;
+  expiresAt: string;
 
   @Prop({ required: true })
   brCode: string;

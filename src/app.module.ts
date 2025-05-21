@@ -3,6 +3,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule } from '@nestjs/config';
 import { ProcessDataController } from './controller/process-data.controller';
 import { ProcessDataService } from './service/process-data.service';
+import { AbacatePayService } from './service/abacatepay.service';
 import { HttpModule } from '@nestjs/axios';
 import { 
   User, 
@@ -27,6 +28,6 @@ import {
     HttpModule,
   ],
   controllers: [ProcessDataController],
-  providers: [ProcessDataService],
+  providers: [ProcessDataService, AbacatePayService],
 })
 export class AppModule {}
