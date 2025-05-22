@@ -54,3 +54,8 @@ pids
 
 # Diagnostic reports (https://nodejs.org/api/report.html)
 report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
+
+# Auth and Cache WWebjs
+/.wwebjs_auth
+/.wwebjs_cache
+/.wwebjs_auth_*
