@@ -13,11 +13,10 @@ import {
   Message,
   MessageSchema,
 } from './schema/schemas';
-import { SendMessageController } from './controller/send-message.controller';
-import { SendMessageService } from './service/send-message.service';
 import { SendMessage, SendMessageSchema } from './schema/send-message.schema';
-import { AssistentModule } from './assistent/assistent.module';
 import { ScheduleModule } from '@nestjs/schedule';
+import { WebhookController } from './controller/webhook.controller';
+import { ProcessWebHookService } from './service/process-webhook.service';
 
 @Module({
   imports: [
@@ -40,9 +39,8 @@ import { ScheduleModule } from '@nestjs/schedule';
       { name: SendMessage.name, schema: SendMessageSchema },
     ]),
     HttpModule,
-    AssistentModule,
   ],
-  controllers: [ProcessDataController, SendMessageController],
-  providers: [ProcessDataService, AbacatePayService, SendMessageService],
+  controllers: [ProcessDataController, WebhookController],
+  providers: [ProcessDataService, AbacatePayService, ProcessWebHookService],
 })
 export class AppModule {}

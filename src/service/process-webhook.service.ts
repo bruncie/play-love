@@ -21,9 +21,10 @@ export class ProcessWebHookService {
     /**
      * Método principal que processa toda a solicitação
      */
-    async process(idCompra: string, status: string): Promise<string> {
-        this.validaStatus(status);
-        this.updatePaymentStatus(idCompra, status)
+    async processWebHook(payload: any, status: string): Promise<string> {
+        this.validaStatus(payload.data.pixQrCode.status);
+        this.updatePaymentStatus(payload.data.pixQrCode.id, 
+            payload.data.pixQrCode.status);
 
         return '';
     }
@@ -47,7 +48,7 @@ export class ProcessWebHookService {
         if (status == 'PENDING') {
             throw new HttpException('O pedido ainda está sendo processado', HttpStatus.BAD_REQUEST);
         }
- 
+
         if (status == 'EXPIRED' || status == 'CANCELLED') {
             throw new HttpException('Pedido cancelado ou expirado', HttpStatus.BAD_REQUEST);
         }

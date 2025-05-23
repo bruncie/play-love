@@ -1,9 +1,9 @@
-import { Controller, Post, Body, HttpException, HttpStatus, Query, HttpCode } from '@nestjs/common';
+import { Controller, Post, Body, HttpException, HttpStatus, Query, HttpCode, Param } from '@nestjs/common';
 import { ProcessWebHookService } from '../service/process-webhook.service';
 import { PayloadDto, QrCodeResponseDto } from '../dto/dto';
 
 @Controller('api')
-export class ProcessDataController {
+export class WebhookController {
   constructor(private readonly processWebHookService: ProcessWebHookService) {}
 
   @Post('webhook')
