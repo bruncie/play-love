@@ -30,6 +30,8 @@ export class SendMessageService {
   ) {}
 
   async sendMessage(dto: SendMessageDto) {
+    console.log('SendMessageService.sendMessage', dto);
+
     // Salva no banco
     await this.sendMessageModel.create(dto);
     // Chama o AI

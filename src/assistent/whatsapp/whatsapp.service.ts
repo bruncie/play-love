@@ -211,7 +211,9 @@ export class WhatsappService implements OnModuleInit {
 
   public async sendMessage(number: string, message: string): Promise<void> {
     try {
+      this.logger.log(`numero: ${number}`);
       const formattedNumber = this.formatter.formatPhoneNumber(number);
+      this.logger.log(`formattedNumber: ${formattedNumber}`);
       this.logger.debug(`Enviando mensagem para: ${formattedNumber}`);
 
       const response = await this.client.sendMessage(formattedNumber, message);

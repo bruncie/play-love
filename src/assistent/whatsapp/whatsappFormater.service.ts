@@ -8,16 +8,20 @@ export class WhatsappFormatter {
   }
 
   public formatPhoneNumber(number: string): string {
-    const cleanNumber = number.replace('+', '');
+    console.log('formatPhoneNumber', number);
 
-    const prefix = cleanNumber.substring(0, 4);
-    let rest = cleanNumber.substring(4);
-
-    if (rest.startsWith('9')) {
-      rest = rest.substring(1);
+    // Remove qualquer caractere não numérico
+    let cleanNumber = number.replace(/\D/g, '');
+    // Remove o 9 do índice 2, se existir
+    if (cleanNumber[2] === '9') {
+      cleanNumber = cleanNumber.slice(0, 2) + cleanNumber.slice(3);
     }
-
-    return '55' + prefix + rest + '@c.us';
+    // Garante que o número tenha o DDI (55) no início
+    let formatted = cleanNumber;
+    if (!formatted.startsWith('55')) {
+      formatted = '55' + formatted;
+    }
+    return formatted + '@c.us';
   }
 
   public parsePhoneNumber(waNumber: string): string {
