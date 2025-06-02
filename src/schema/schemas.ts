@@ -71,6 +71,9 @@ export class Message extends Document {
 
   @Prop({ required: true })
   mensagem: string;
+
+  @Prop({ required: true })
+  status_message: string;
 }
 
 export const MessageSchema = SchemaFactory.createForClass(Message);
