@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { HttpService } from '@nestjs/axios';
 import { Model } from 'mongoose';
 import { User, Payment, Message } from '../schema/schemas';
 import { PayloadDto, QrCodeResponseDto, UserDataDto, FormDataDto } from '../dto/dto';
@@ -76,6 +75,7 @@ export class ProcessDataService {
       nomeDestinario: formData.nomeDestinario,
       numeroDestinario: formData.numeroDestinario,
       mensagem: formData.mensagem,
+      status_message: 'PENDING', // Inicializa como PENDING
     };
 
     const message = new this.messageModel(messageData);

@@ -1,3 +1,4 @@
+import { APP_FILTER } from '@nestjs/core';
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule, ConfigService } from '@nestjs/config';
@@ -17,6 +18,7 @@ import { SendMessage, SendMessageSchema } from './schema/send-message.schema';
 import { ScheduleModule } from '@nestjs/schedule';
 import { WebhookController } from './controller/webhook.controller';
 import { ProcessWebHookService } from './service/process-webhook.service';
+import { GlobalExceptionFilter } from './exception/GlobalExceptionFilter';
 
 @Module({
   imports: [
@@ -41,6 +43,10 @@ import { ProcessWebHookService } from './service/process-webhook.service';
     HttpModule,
   ],
   controllers: [ProcessDataController, WebhookController],
-  providers: [ProcessDataService, AbacatePayService, ProcessWebHookService],
+  providers: [ProcessDataService, AbacatePayService, ProcessWebHookService,
+  {
+    provide: APP_FILTER,
+    useClass: GlobalExceptionFilter,
+  },],
 })
 export class AppModule {}
