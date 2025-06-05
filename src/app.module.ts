@@ -4,7 +4,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ProcessDataController } from './controller/process-data.controller';
 import { ProcessDataService } from './service/process-data.service';
-import { AbacatePayService } from './service/abacatepay.service';
+import { PagarmeService } from './service/pagarme.service';
 import { HttpModule } from '@nestjs/axios';
 import {
   User,
@@ -43,7 +43,7 @@ import { GlobalExceptionFilter } from './exception/GlobalExceptionFilter';
     HttpModule,
   ],
   controllers: [ProcessDataController, WebhookController],
-  providers: [ProcessDataService, AbacatePayService, ProcessWebHookService,
+  providers: [ProcessDataService, PagarmeService, ProcessWebHookService,
   {
     provide: APP_FILTER,
     useClass: GlobalExceptionFilter,
