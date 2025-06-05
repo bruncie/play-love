@@ -33,13 +33,25 @@ export class SendMessageService {
     console.log('SendMessageService.sendMessage', dto);
 
     // Salva no banco
-    await this.sendMessageModel.create(dto);
+    await this.sendMessageModel.create({
+      senderName: dto.senderName,
+      senderPhone: this.formatPhoneNumber(dto.senderPhone),
+      senderMessage: dto.senderMessage,
+      recipientName: dto.recipientName,
+      recipientPhone: this.formatPhoneNumber(dto.recipientPhone),
+    });
     // Chama o AI
     return this.aiService.processMessage(
-      dto.recipientPhone,
-      '',
-      dto.recipientName,
-      dto.senderMessage,
+      this.formatPhoneNumber(dto.recipientPhone),
+      'boas vindas',
     );
+  }
+
+  private formatPhoneNumber(phone: string): string {
+    let cleanNumber = phone.replace(/\D/g, '');
+    if (cleanNumber.length >= 11) {
+      cleanNumber = cleanNumber.slice(0, 2) + cleanNumber.slice(3);
+    }
+    return cleanNumber;
   }
 }

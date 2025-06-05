@@ -10,11 +10,13 @@ import {
 import { ConfigModule } from '@nestjs/config';
 import { WhatsappSessionStoreService } from './whatsapp/whatsappSessionStore';
 import { QrControllerController } from './whatsapp/qr-controller.controller';
+import { SendMessage, SendMessageSchema } from '../schema/send-message.schema';
 
 @Module({
   imports: [
     MongooseModule.forFeature([
       { name: UserConversationModel.name, schema: UserConversationSchema },
+      { name: SendMessage.name, schema: SendMessageSchema },
     ]),
     ConfigModule,
   ],

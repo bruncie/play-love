@@ -13,7 +13,7 @@ export class WhatsappFormatter {
     // Remove qualquer caractere não numérico
     let cleanNumber = number.replace(/\D/g, '');
     // Remove o 9 do índice 2, se existir
-    if (cleanNumber[2] === '9') {
+    if (cleanNumber.length >= 11) {
       cleanNumber = cleanNumber.slice(0, 2) + cleanNumber.slice(3);
     }
     // Garante que o número tenha o DDI (55) no início

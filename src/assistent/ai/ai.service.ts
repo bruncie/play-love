@@ -1,14 +1,13 @@
 import { forwardRef, Inject, Injectable, Logger } from '@nestjs/common';
 import { ChatOpenAI } from '@langchain/openai';
-import { GeneralChain } from './chains/generalChain';
-import { generalPrompt } from './prompt/prompt-cupido';
 import { ConversationService } from '../conversation/conversation.service';
 import { WhatsappService } from '../whatsapp/whatsapp.service';
+import { RouterChain } from './chains/routerChain';
 
 @Injectable()
 export class AiService {
   private model: ChatOpenAI;
-  private GeneralChain: GeneralChain;
+  private RouterChain: RouterChain;
   private readonly logger = new Logger(AiService.name);
 
   constructor(
@@ -20,16 +19,10 @@ export class AiService {
       modelName: 'gpt-4o-mini-2024-07-18',
       temperature: 0.7,
     });
-
-    this.GeneralChain = new GeneralChain(this.model, generalPrompt);
+    this.RouterChain = new RouterChain(this.model, this.conversationService);
   }
 
-  async processMessage(
-    userId: string,
-    message: string,
-    name?: string,
-    secretMessage?: string,
-  ) {
+  async processMessage(userId: string, message: string) {
     let responseText;
     let response;
 
@@ -39,13 +32,10 @@ export class AiService {
       const conversationHistory =
         this.conversationService.getUserHistory(userId);
 
-      const inputMessage = this.buildInputMessage(message, name, secretMessage);
-
-      response = await this.GeneralChain.call({
-        input: inputMessage,
+      response = await this.RouterChain.call({
+        input: message,
         history: conversationHistory,
-        recipientName: name,
-        secretMessage: secretMessage,
+        userId,
       });
 
       responseText = this.handleResponseText(response);
@@ -56,18 +46,6 @@ export class AiService {
     } catch (error) {
       return this.handleProcessMessageError(error, userId);
     }
-  }
-
-  private buildInputMessage(
-    message: string,
-    name?: string,
-    secretMessage?: string,
-  ): string {
-    if (secretMessage && name) {
-      return `Uma nova mensagem foi enviada por um admirador secreto para ${name}. O conteúdo da mensagem é: "${secretMessage}". Por favor, envie uma mensagem romântica e misteriosa perguntando se ${name} deseja ler.`;
-    }
-
-    return message;
   }
 
   async clearUserHistory(userId: string): Promise<void> {

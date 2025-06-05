@@ -1,6 +1,9 @@
+import { Logger } from '@nestjs/common';
+
 // chains/base.chain.ts
 export abstract class BaseChain {
-  abstract call(values: { input: string; history: any[] }): Promise<any>;
+  readonly logger = new Logger(BaseChain.name);
+  abstract call(values: { input: string; history?: any[] }): Promise<any>;
 
   protected formatHistoryInput(input: string, history: any[]): string {
     if (!history || history.length === 0) {
