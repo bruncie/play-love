@@ -1,9 +1,10 @@
+import { APP_FILTER } from '@nestjs/core';
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ProcessDataController } from './controller/process-data.controller';
 import { ProcessDataService } from './service/process-data.service';
-import { AbacatePayService } from './service/abacatepay.service';
+import { PagarmeService } from './service/pagarme.service';
 import { HttpModule } from '@nestjs/axios';
 import {
   User,
@@ -13,11 +14,11 @@ import {
   Message,
   MessageSchema,
 } from './schema/schemas';
-import { SendMessageController } from './controller/send-message.controller';
-import { SendMessageService } from './service/send-message.service';
 import { SendMessage, SendMessageSchema } from './schema/send-message.schema';
-import { AssistentModule } from './assistent/assistent.module';
 import { ScheduleModule } from '@nestjs/schedule';
+import { WebhookController } from './controller/webhook.controller';
+import { ProcessWebHookService } from './service/process-webhook.service';
+import { GlobalExceptionFilter } from './exception/GlobalExceptionFilter';
 
 @Module({
   imports: [
@@ -40,9 +41,12 @@ import { ScheduleModule } from '@nestjs/schedule';
       { name: SendMessage.name, schema: SendMessageSchema },
     ]),
     HttpModule,
-    AssistentModule,
   ],
-  controllers: [ProcessDataController, SendMessageController],
-  providers: [ProcessDataService, AbacatePayService, SendMessageService],
+  controllers: [ProcessDataController, WebhookController],
+  providers: [ProcessDataService, PagarmeService, ProcessWebHookService,
+  {
+    provide: APP_FILTER,
+    useClass: GlobalExceptionFilter,
+  },],
 })
 export class AppModule {}
