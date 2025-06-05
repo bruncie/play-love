@@ -45,7 +45,6 @@ export class PayloadDto {
 }
 
 export class QrCodeResponseDto {
-  id_compra: string;
   id_mensagem: string;
   brCode: string;
   brCodeBase64: string;
@@ -56,11 +55,17 @@ export class AbacatePayStatusResponseDto {
   expiresAt: string;
 }
 
-export class AbacatePayQrCodeResponseDto {
+export class PixResponseDto {
   id: string;
   amount: string;
   status: string;
   expiresAt: string;
-  brCode: string;
-  brCodeBase64: string;
+  qrCode: string;
+  qrCodeUrl: string;
+}
+
+export class HomePhoneDto {
+  phone: string;
+  countryCode: string;
+  area:string;
 }

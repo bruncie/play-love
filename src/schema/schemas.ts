@@ -17,8 +17,12 @@ export class User extends Document {
   @Prop({ required: true })
   taxId: string;
 
+  // @Prop({ required: true })
+  // rate_limit: number;
+
   @Prop({ default: () => uuidv4() })
   user_id: string;
+
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
@@ -39,16 +43,14 @@ export class Payment extends Document {
   expiresAt: string;
 
   @Prop({ required: true })
-  brCode: string;
+  qrCode: string;
 
   @Prop({ required: true })
-  brCodeBase64: string;
+  qrCodeUrl: string;
 
   @Prop({ required: true })
   status: string;
-  
-  @Prop({ type: Object })
-  abacatePayResponse: Record<string, any>;
+
 }
 
 export const PaymentSchema = SchemaFactory.createForClass(Payment);

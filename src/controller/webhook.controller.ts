@@ -8,10 +8,12 @@ export class WebhookController {
 
   @Post('webhook')
   @HttpCode(HttpStatus.NO_CONTENT)
-  async processData(@Body() payload: any,
-    @Query('webhookSecret') webhookSecret: string,): Promise<void> {
+  async processData(@Body() payload: any): Promise<void> {
+      //@Query('webhookSecret') webhookSecret: string,): Promise<void> {
     try {
-      this.validaPayloadSecret(payload, webhookSecret);
+      //this.validaPayloadSecret(payload, webhookSecret);
+      console.log('#############################################################');
+      console.log('payload recebido', payload);
       this.processWebHookService.processWebHook(payload);
 
     } catch (error) {
