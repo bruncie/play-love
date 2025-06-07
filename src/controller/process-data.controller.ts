@@ -6,7 +6,7 @@ import { PayloadDto, QrCodeResponseDto } from '../dto/dto';
 export class ProcessDataController {
   constructor(private readonly processDataService: ProcessDataService) { }
 
-  @Post('messages')
+  @Post('messages/qrcode')
   async processData(@Body() payload: PayloadDto): Promise<QrCodeResponseDto> {
     try {
       return await this.processDataService.processPayload(payload);
@@ -18,12 +18,10 @@ export class ProcessDataController {
     }
   }
 
-  @Get(':id_compra/:id_mensagem')
-  async getStatus(
-    @Param('id_compra') id_compra: string,
-    @Param('id_mensagem') id_mensagem: string): Promise<string> {
+  @Post('messages')
+  async getStatus(@Body() payload: PayloadDto): Promise<number> {
     try {
-      return await this.processDataService.getStatus(id_compra, id_mensagem);
+      return await this.processDataService.sendMessage(payload);
     } catch (error) {
       throw new HttpException(
         error.message || 'Desculpe, não conseguimos processar sua solicitação',

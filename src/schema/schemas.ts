@@ -17,8 +17,8 @@ export class User extends Document {
   @Prop({ required: true })
   taxId: string;
 
-  // @Prop({ required: true })
-  // rate_limit: number;
+  @Prop({ required: true })
+  rate_limit: number;
 
   @Prop({ default: () => uuidv4() })
   user_id: string;

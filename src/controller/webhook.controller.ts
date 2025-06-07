@@ -12,7 +12,7 @@ export class WebhookController {
       //@Query('webhookSecret') webhookSecret: string,): Promise<void> {
     try {
       //this.validaPayloadSecret(payload, webhookSecret);
-      console.log('#############################################################');
+      console.log('#################### WEBHOOK ################################');
       console.log('payload recebido', payload);
       this.processWebHookService.processWebHook(payload);
 
