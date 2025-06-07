@@ -7,6 +7,7 @@ import {
   ConversationMessage,
   UserConversation,
 } from './conversation.schema';
+import { SendMessage } from '../../schema/send-message.schema';
 
 @Injectable()
 export class ConversationService implements OnModuleInit {
@@ -21,6 +22,8 @@ export class ConversationService implements OnModuleInit {
   constructor(
     @InjectModel(UserConversationModel.name)
     private userConversationModel: Model<UserConversationModel>,
+    @InjectModel(SendMessage.name)
+    private sendMessageModel: Model<SendMessage>,
   ) {}
 
   /**
@@ -261,5 +264,23 @@ export class ConversationService implements OnModuleInit {
     } catch (error) {
       this.logger.error('Erro ao limpar conversas antigas', error);
     }
+  }
+
+  /**
+   * Busca a última mensagem secreta enviada para o usuário (recipientPhone)
+   */
+  async getSecretMessageForUser(
+    recipientPhone: string,
+  ): Promise<string | null> {
+    const doc = await this.sendMessageModel
+      .findOne({ recipientPhone })
+      .sort({ createdAt: -1 });
+    return doc?.senderMessage || null;
+  }
+
+  async getSecretMessageDocForUser(senderPhone: string): Promise<any | null> {
+    return await this.sendMessageModel
+      .findOne({ senderPhone })
+      .sort({ createdAt: -1 });
   }
 }
