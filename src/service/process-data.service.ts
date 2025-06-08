@@ -1,19 +1,25 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { User, Payment, Message } from '../schema/schemas';
-import { PayloadDto, QrCodeResponseDto, UserDataDto, FormDataDto } from '../dto/dto';
+import {
+  PayloadDto,
+  QrCodeResponseDto,
+  UserDataDto,
+  FormDataDto,
+} from '../dto/dto';
 import { PagarmeService } from './pagarme.service';
 
 @Injectable()
 export class ProcessDataService {
+  private readonly logger = new Logger(ProcessDataService.name);
 
   constructor(
     @InjectModel(User.name) private userModel: Model<User>,
     @InjectModel(Payment.name) private paymentModel: Model<Payment>,
     @InjectModel(Message.name) private messageModel: Model<Message>,
     private readonly pagarmeService: PagarmeService,
-  ) { }
+  ) {}
 
   /**
    * Processa o payload recebido
@@ -90,9 +96,13 @@ private async salvaUsuario(userData: UserDataDto): Promise<User> {
   return await user.save();
 }
 
-  private async geraQrCodePix(user_id: string, userData: UserDataDto): Promise<Payment> {
-    console.log('ProcessDataService: criando qrCode')
-    const pixQrCodeResponse = await this.pagarmeService.createPixQrCode(userData);
+  private async geraQrCodePix(
+    user_id: string,
+    userData: UserDataDto,
+  ): Promise<Payment> {
+    this.logger.log('ProcessDataService: criando qrCode');
+    const pixQrCodeResponse =
+      await this.pagarmeService.createPixQrCode(userData);
 
     const payment = new this.paymentModel({
       user_id: user_id,
@@ -121,7 +131,14 @@ private async salvaUsuario(userData: UserDataDto): Promise<User> {
     return await message.save();
   }
 
-  private retornaQrCode(payment: Payment, mensagem: Message): QrCodeResponseDto {
+    const message = new this.messageModel(messageData);
+    return await message.save();
+  }
+
+  private retornaQrCode(
+    payment: Payment,
+    mensagem: Message,
+  ): QrCodeResponseDto {
     return {
       id_mensagem: mensagem.id_mensagem,
       brCode: payment.qrCode,
