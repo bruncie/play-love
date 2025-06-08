@@ -19,6 +19,8 @@ import { ScheduleModule } from '@nestjs/schedule';
 import { WebhookController } from './controller/webhook.controller';
 import { ProcessWebHookService } from './service/process-webhook.service';
 import { GlobalExceptionFilter } from './exception/GlobalExceptionFilter';
+import { SendMessageService } from './service/send-message.service';
+import { AssistentModule } from './assistent/assistent.module';
 
 @Module({
   imports: [
@@ -27,6 +29,7 @@ import { GlobalExceptionFilter } from './exception/GlobalExceptionFilter';
       isGlobal: true,
       envFilePath: '.env',
     }),
+    AssistentModule, // Importando o módulo assistente
     MongooseModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => ({
@@ -43,7 +46,7 @@ import { GlobalExceptionFilter } from './exception/GlobalExceptionFilter';
     HttpModule,
   ],
   controllers: [ProcessDataController, WebhookController],
-  providers: [ProcessDataService, PagarmeService, ProcessWebHookService,
+  providers: [ProcessDataService, PagarmeService, ProcessWebHookService, SendMessageService ,
   {
     provide: APP_FILTER,
     useClass: GlobalExceptionFilter,

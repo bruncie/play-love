@@ -2,6 +2,8 @@ import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { User, Payment, Message } from '../schema/schemas';
+import { SendMessageService } from './send-message.service';
+import { SendMessageDto } from 'src/dto/send-message.dto';
 
 @Injectable()
 export class ProcessWebHookService {
@@ -10,6 +12,7 @@ export class ProcessWebHookService {
         @InjectModel(User.name) private userModel: Model<User>,
         @InjectModel(Payment.name) private paymentModel: Model<Payment>,
         @InjectModel(Message.name) private messageModel: Model<Message>,
+        private readonly sendMessageService: SendMessageService,
     ) { }
 
     /**
@@ -29,7 +32,7 @@ export class ProcessWebHookService {
                 if (customerMessage) {
 
                     // envia mensagem para o WhatsApp
-                    // await this.whatsappService.sendMessage(customerMessage.numeroDestinario, customerMessage.mensagem);
+                    await this.sendMessageService.sendMessage(this.mapToSendMessageDto(customerMessage));
 
                     // Atualiza a mensagem mais antiga para 'SENT'
                     customerMessage.status_message = 'SENT';
@@ -94,7 +97,13 @@ export class ProcessWebHookService {
         }
     }
 
-    // async plusRateLimit(amoun: number, idCompra: string): Promise<void> {
-    //     await 
-    // }
+    private mapToSendMessageDto(message: Message): SendMessageDto {
+    const dto = new SendMessageDto();
+    dto.senderName = message.userName;
+    dto.senderPhone = message.numeroRemetente;
+    dto.senderMessage = message.mensagem;
+    dto.recipientName = message.nomeDestinario;
+    dto.recipientPhone = message.numeroDestinario;
+    return dto;
+  }
 }

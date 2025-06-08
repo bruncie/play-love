@@ -29,7 +29,7 @@ export class ProcessDataService {
   async processPayload(payload: PayloadDto): Promise<QrCodeResponseDto> {
     const user = await this.salvaUsuario(payload.userData);
     const payment = await this.geraQrCodePix(user.user_id, payload.userData);
-    const mensagem = await this.salvaDadosMensagem(user.user_id, payload.formData, 'PENDING');
+    const mensagem = await this.salvaDadosMensagem(user.user_id, payload, 'PENDING');
     return this.retornaQrCode(payment, mensagem);
   }
 
@@ -59,7 +59,7 @@ export class ProcessDataService {
       await user.save();
 
       // Salva a mensagem 
-      await this.salvaDadosMensagem(user.user_id, payload.formData, 'SENT');
+      await this.salvaDadosMensagem(user.user_id, payload, 'SENT');
 
       return user.rate_limit;
 
@@ -117,13 +117,15 @@ private async salvaUsuario(userData: UserDataDto): Promise<User> {
     return await payment.save();
   }
 
-  private async salvaDadosMensagem(id_user: string, formData: FormDataDto, status: string): Promise<Message> {
-    console.log(formData.mensagem)
+  private async salvaDadosMensagem(id_user: string, payload: PayloadDto, status: string): Promise<Message> {
+    console.log(payload.formData.mensagem)
     const messageData = {
       id_user,
-      nomeDestinario: formData.nomeDestinario,
-      numeroDestinario: formData.numeroDestinario,
-      mensagem: formData.mensagem,
+      userName: payload.userData.nome,
+      numeroRemetente: payload.userData.celular,
+      nomeDestinario: payload.formData.nomeDestinario,
+      numeroDestinario: payload.formData.numeroDestinario,
+      mensagem: payload.formData.mensagem,
       status_message: status,
     };
 

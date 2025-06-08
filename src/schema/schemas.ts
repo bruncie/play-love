@@ -66,6 +66,12 @@ export class Message extends Document {
   id_user: string;
 
   @Prop({ required: true })
+  userName: string;
+
+  @Prop({ required: true })
+  numeroRemetente: string;
+
+  @Prop({ required: true })
   nomeDestinario: string;
 
   @Prop({ required: true })
