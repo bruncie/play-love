@@ -26,7 +26,7 @@ export class PagarmeService {
         console.log('PagarmeService: criando QrCode PIX');
         const amount = 100; // Valor fixo ou dinâmico conforme necessário
         const expiresIn = 3600; // 1 hora de expiração
-        const description = "Mensagens para destinatário";
+        const description = "CatChat - Mensagens anonimas via WhatsApp";
         const numberUser = this.getHomePhone(userData);
 
         try {
@@ -43,7 +43,7 @@ export class PagarmeService {
                         name: userData.nome,
                         email: userData.email,
                         type: 'individual',
-                        document: '70595980490',//userData.taxId.replace(/\D/g, ''), // Remove caracteres não numéricos
+                        document: userData.taxId.replace(/\D/g, ''), // Remove caracteres não numéricos
                         phones: {
                             home_phone: {
                                 country_code: numberUser.countryCode,
@@ -87,8 +87,6 @@ export class PagarmeService {
                 qrCode: data.charges[0].last_transaction.qr_code,
                 qrCodeUrl: data.charges[0].last_transaction.qr_code_url,
             };
-            console.log('##########################################');
-            console.log('QrCode gerado com sucesso:', qrCodeResponse);
 
             return qrCodeResponse;
         } catch (error) {
