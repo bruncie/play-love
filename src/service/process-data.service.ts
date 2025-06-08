@@ -131,10 +131,6 @@ private async salvaUsuario(userData: UserDataDto): Promise<User> {
     return await message.save();
   }
 
-    const message = new this.messageModel(messageData);
-    return await message.save();
-  }
-
   private retornaQrCode(
     payment: Payment,
     mensagem: Message,
