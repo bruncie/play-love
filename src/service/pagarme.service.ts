@@ -2,7 +2,7 @@ import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
 import { ConfigService } from '@nestjs/config';
 import { lastValueFrom } from 'rxjs';
-import { PixResponseDto, AbacatePayStatusResponseDto, UserDataDto, HomePhoneDto } from 'src/dto/dto';
+import { PixResponseDto, UserDataDto, HomePhoneDto } from 'src/dto/dto';
 
 @Injectable()
 export class PagarmeService {
