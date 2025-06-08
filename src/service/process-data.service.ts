@@ -29,37 +29,72 @@ export class ProcessDataService {
   async processPayload(payload: PayloadDto): Promise<QrCodeResponseDto> {
     const user = await this.salvaUsuario(payload.userData);
     const payment = await this.geraQrCodePix(user.user_id, payload.userData);
-    const mensagem = await this.salvaDadosMensagem(
-      user.user_id,
-      payload.formData,
-    );
+    const mensagem = await this.salvaDadosMensagem(user.user_id, payload.formData, 'PENDING');
     return this.retornaQrCode(payment, mensagem);
   }
 
   /**
-   * Verifica o status do pagamento
-   * @param id ID do pagamento
-   * @returns Status do pagamento
+   * Envia uma mensagem para o WhatsApp
+   * Obs: Usuário já pagou e tem rate_limit > 0
+   * @param payload Dados do usuário e mensagem
+   * @returns rate_Limit
    */
-  async getStatus(id_compra: string, id_mensagem: string): Promise<string> {
-    // const pixStatus = await this.abacatePayService.checkPixStatus(id_compra);
+  async sendMessage(payload: PayloadDto): Promise<number> {
+    try {
+      const user = await this.findOneByFilters(payload.userData);
 
-    // if (pixStatus != 'PAID') {
-    //   throw new Error('Pagamento ainda não foi confirmado');
-    // }
-    // const mensagem = await this.messageModel.findOne({ id_mensagem });
+      if (user == null) {
+        throw new Error('Usuário não encontrado');
+      }
 
-    // //postar mensagem no whatsapp
-    // // await this.whatsappService.sendMessage(mensagem.numeroDestinario, mensagem.mensagem);
+      if (user.rate_limit <= 0) {
+        throw new Error('Saldo insuficiente para enviar mensagem');
+      }
 
-    return 'pixStatus.status';
+      // Envia a mensagem para o WhatsApp 
+      // await this.whatsappService.sendMessage(mensagem.numeroDestinario, mensagem.mensagem); 
+
+      // Atualiza o rate_limit do usuário 
+      user.rate_limit -= 1;
+      await user.save();
+
+      // Salva a mensagem 
+      await this.salvaDadosMensagem(user.user_id, payload.formData, 'SENT');
+
+      return user.rate_limit;
+
+    } catch (error) {
+      console.error('Erro ao processar mensagem:', error);
+      throw error;
+    }
   }
 
-  private async salvaUsuario(userData: UserDataDto): Promise<User> {
-    const user = new this.userModel(userData);
-    this.logger.log('ProcessDataService: salvando dados do usuario');
-    return await user.save();
+  private async findOneByFilters(filters: UserDataDto): Promise<User | null> {
+    const query: any = {};
+
+    query.celular = filters.celular;
+    query.email = filters.email;
+    query.taxId = filters.taxId;
+
+    return this.userModel.findOne(query).exec();
   }
+
+private async salvaUsuario(userData: UserDataDto): Promise<User> {
+  console.log(userData)
+  const existingUser = await this.findOneByFilters(userData);
+
+  console.log(existingUser)
+
+  if (existingUser) {
+    return existingUser;
+  }
+
+  const user = new this.userModel(userData);
+  user.rate_limit = 0; // Padrão de rate limit inicial
+  console.log('ProcessDataService: salvando dados do usuario');
+  console.log(user)
+  return await user.save();
+}
 
   private async geraQrCodePix(
     user_id: string,
@@ -82,18 +117,19 @@ export class ProcessDataService {
     return await payment.save();
   }
 
-  private async salvaDadosMensagem(
-    id_user: string,
-    formData: FormDataDto,
-  ): Promise<Message> {
-    this.logger.log(formData.mensagem);
+  private async salvaDadosMensagem(id_user: string, formData: FormDataDto, status: string): Promise<Message> {
+    console.log(formData.mensagem)
     const messageData = {
       id_user,
       nomeDestinario: formData.nomeDestinario,
       numeroDestinario: formData.numeroDestinario,
       mensagem: formData.mensagem,
-      status_message: 'PENDING', // Inicializa como PENDING
+      status_message: status,
     };
+
+    const message = new this.messageModel(messageData);
+    return await message.save();
+  }
 
     const message = new this.messageModel(messageData);
     return await message.save();
