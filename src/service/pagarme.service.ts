@@ -14,7 +14,8 @@ export class PagarmeService {
         private readonly configService: ConfigService,
     ) {
         this.apiUrl = this.configService.get<string>('PAGARME_URL')!;
-        this.apiKey = this.configService.get<string>('PAGARME_API_KEY_TEST')!;
+        //this.apiKey = this.configService.get<string>('PAGARME_API_KEY_TEST')!;
+        this.apiKey = this.configService.get<string>('PAGARME_API_KEY_PROD')!;
     }
 
     /**
@@ -24,7 +25,7 @@ export class PagarmeService {
      */
     async createPixQrCode(userData: UserDataDto): Promise<PixResponseDto> {
         console.log('PagarmeService: criando QrCode PIX');
-        const amount = 100; // Valor fixo ou dinâmico conforme necessário
+        const amount = 300; // Valor em centavos
         const expiresIn = 3600; // 1 hora de expiração
         const description = "CatChat - Mensagens anonimas via WhatsApp";
         const numberUser = this.getHomePhone(userData);
