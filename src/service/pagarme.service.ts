@@ -8,6 +8,7 @@ import { PixResponseDto, UserDataDto, HomePhoneDto } from 'src/dto/dto';
 export class PagarmeService {
     private readonly apiUrl: string;
     private readonly apiKey: string;
+    private readonly amountPix: number;
 
     constructor(
         private readonly httpService: HttpService,
@@ -16,6 +17,7 @@ export class PagarmeService {
         this.apiUrl = this.configService.get<string>('PAGARME_URL')!;
         //this.apiKey = this.configService.get<string>('PAGARME_API_KEY_TEST')!;
         this.apiKey = this.configService.get<string>('PAGARME_API_KEY_PROD')!;
+        this.amountPix = this.configService.get<number>('AMOUNT_PIX')!;
     }
 
     /**
@@ -25,7 +27,7 @@ export class PagarmeService {
      */
     async createPixQrCode(userData: UserDataDto): Promise<PixResponseDto> {
         console.log('PagarmeService: criando QrCode PIX');
-        const amount = 300; // Valor em centavos
+        const amount = this.amountPix; // Valor em centavos
         const expiresIn = 3600; // 1 hora de expiração
         const description = "CatChat - Mensagens anonimas via WhatsApp";
         const numberUser = this.getHomePhone(userData);
