@@ -21,6 +21,7 @@ import { ProcessWebHookService } from './service/process-webhook.service';
 import { GlobalExceptionFilter } from './exception/GlobalExceptionFilter';
 import { SendMessageService } from './service/send-message.service';
 import { AssistentModule } from './assistent/assistent.module';
+import { HealthCheckController } from './controller/health-check.controller';
 
 @Module({
   imports: [
@@ -45,7 +46,7 @@ import { AssistentModule } from './assistent/assistent.module';
     ]),
     HttpModule,
   ],
-  controllers: [ProcessDataController, WebhookController],
+  controllers: [ProcessDataController, WebhookController, HealthCheckController],
   providers: [ProcessDataService, PagarmeService, ProcessWebHookService, SendMessageService ,
   {
     provide: APP_FILTER,
