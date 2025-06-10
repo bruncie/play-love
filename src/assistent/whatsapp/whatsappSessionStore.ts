@@ -39,6 +39,16 @@ export class WhatsappSessionStoreService implements Store {
     }
 
     const bucket = this.getBucket(session);
+
+    // Remove todos os arquivos anteriores antes de salvar o novo
+    const docs = await bucket.find({ filename: `${session}.zip` }).toArray();
+    if (docs.length > 0) {
+      this.logger.debug(
+        `Removendo ${docs.length} arquivos antigos da sessão ${session}`,
+      );
+      await Promise.all(docs.map((doc) => bucket.delete(doc._id)));
+    }
+
     const upload = bucket.openUploadStream(`${session}.zip`);
     const stream = fs.createReadStream(zipPath);
 

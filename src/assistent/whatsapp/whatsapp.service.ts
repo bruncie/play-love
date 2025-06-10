@@ -222,9 +222,3 @@ export class WhatsappService implements OnModuleInit {
     }
   }
 }
-
-// 55812549672@c.us
-// 55812549672@c.us
-// 8192549672
-// 81992878362
-// 5581992878362@c.us
