@@ -15,8 +15,7 @@ export class PagarmeService {
         private readonly configService: ConfigService,
     ) {
         this.apiUrl = this.configService.get<string>('PAGARME_URL')!;
-        //this.apiKey = this.configService.get<string>('PAGARME_API_KEY_TEST')!;
-        this.apiKey = this.configService.get<string>('PAGARME_API_KEY_PROD')!;
+        this.apiKey = this.configService.get<string>('PAGARME_API_KEY')!;
         this.amountPix = this.configService.get<number>('AMOUNT_PIX')!;
     }
 
