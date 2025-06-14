@@ -27,7 +27,7 @@ export class ProcessWebHookService {
         this.validaAtualizaStatus(statusCompra, payment.id_compra);
 
         //busca a mensagem mais antiga pendente do usuário
-        this.findOldestOrderByUserIdAndStatus(payment.user_id, 'PENDING')
+        this.findLastOrderByUserIdAndStatus(payment.user_id, 'PENDING')
             .then(async (customerMessage) => {
                 if (customerMessage) {
 
@@ -69,11 +69,11 @@ export class ProcessWebHookService {
         return payment;
     }
 
-    async findOldestOrderByUserIdAndStatus(idUser: string, statusMessage: string): Promise<Message | null> {
+    async findLastOrderByUserIdAndStatus(idUser: string, statusMessage: string): Promise<Message | null> {
         console.log('Buscando mensagem mais antiga do usuário');
         const customerMessage = this.messageModel
             .findOne({ id_user: idUser, status_message: statusMessage })       // filtro pelos dois campos
-            .sort({ createdAt: 1 })            // 1 = mais antigo primeiro
+            .sort({ createdAt: -1 })            // 1 = mais antigo primeiro
             .exec();                           // retorna o primeiro da ordenação
         console.log('Mensagem encontrada:', customerMessage);
         return customerMessage;
