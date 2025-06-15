@@ -79,7 +79,7 @@ export class ProcessDataService {
     const query: any = {};
 
     query.celular = filters.celular;
-    query.email = filters.email;
+    //query.email = filters.email;
     query.taxId = filters.taxId;
 
     return this.userModel.findOne(query).exec();
