@@ -39,6 +39,7 @@ export class SendMessageService {
       senderMessage: dto.senderMessage,
       recipientName: dto.recipientName,
       recipientPhone: this.formatPhoneNumber(dto.recipientPhone),
+      status: false, // Inicialmente, a mensagem não foi enviada
     });
     // Chama o AI
     return this.aiService.processMessage(
