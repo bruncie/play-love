@@ -43,7 +43,7 @@ export class PagarmeService {
                     ],
                     customer: {
                         name: userData.nome,
-                        email: userData.email,
+                        email: "persantech@gmail.com",
                         type: 'individual',
                         document: userData.taxId.replace(/\D/g, ''), // Remove caracteres não numéricos
                         phones: {
